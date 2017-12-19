@@ -24,20 +24,20 @@ define(function(require) {
 
     initialize: function(options) {
       this.preRender();
-        // Set form on view
-        if (options && options.form) {
-          this.form = options.form;
+      // Set form on view
+      if (options && options.form) {
+        this.form = options.form;
+      }
+      this.render();
+      this.listenTo(Origin, 'sidebar:resetButtons', this.resetButtons);
+      this.listenTo(Origin, 'sidebar:views:animateIn', this.animateViewIn);
+      _.defer(_.bind(function() {
+        this.setupView();
+        if (this.form) {
+          this.setupFieldsetFilters();
+          this.listenTo(Origin, 'editorSidebar:showErrors', this.onShowErrors);
         }
-        this.render();
-        this.listenTo(Origin, 'sidebar:resetButtons', this.resetButtons);
-        this.listenTo(Origin, 'sidebar:views:animateIn', this.animateViewIn);
-        _.defer(_.bind(function() {
-          this.setupView();
-          if (this.form) {
-            this.setupFieldsetFilters();
-            this.listenTo(Origin, 'editorSidebar:showErrors', this.onShowErrors);
-          }
-        }, this));
+      }, this));
     },
 
     preRender: function() {},
