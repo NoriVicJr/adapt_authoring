@@ -79,7 +79,7 @@ define(function(require) {
 
     removeColorPicker: function() {
       this.getColourPicker().remove();
-    }
+    },
 
     setValue: function(newValue) {
       Backbone.Form.editors.Text.prototype.setValue.apply(this, arguments);
