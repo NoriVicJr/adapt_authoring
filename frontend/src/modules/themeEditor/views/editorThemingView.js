@@ -1,12 +1,12 @@
 // LICENCE https://github.com/adaptlearning/adapt_authoring/blob/master/LICENSE
 define(function(require){
   var Backbone = require('backbone');
-  var EditorOriginView = require('editorGlobal/views/editorOriginView');
+  var EditorOriginView = require('modules/editor/global/views/editorOriginView');
   var Handlebars = require('handlebars');
-  var Helpers = require('coreJS/app/helpers');
-  var Origin = require('coreJS/app/origin');
-  var ThemeCollection = require('editorTheme/collections/editorThemeCollection');
-
+  var Helpers = require('core/helpers');
+  var Origin = require('core/origin');
+  var ThemeCollection = require('modules/editor/selectTheme/collections/editorThemeCollection');
+  // locals
   var PresetCollection = require('../collections/editorPresetCollection.js');
   var PresetEditView = require('./editorPresetEditView.js');
   var PresetModel = require('../models/editorPresetModel.js');

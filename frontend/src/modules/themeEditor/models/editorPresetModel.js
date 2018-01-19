@@ -1,8 +1,8 @@
 // LICENCE https://github.com/adaptlearning/adapt_authoring/blob/master/LICENSE
 define(function(require) {
-	var EditorModel = require('editorGlobal/models/editorModel');
+	var ContentModel = require('core/models/contentModel');
 
-	var EditorPresetModel = EditorModel.extend({
+	var EditorPresetModel = ContentModel.extend({
 		urlRoot: '/api/content/themepreset',
 	});
 	
