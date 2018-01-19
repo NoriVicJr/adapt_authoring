@@ -5,6 +5,6 @@ define(function(require) {
 	var EditorPresetModel = ContentModel.extend({
 		urlRoot: '/api/content/themepreset',
 	});
-	
+
 	return EditorPresetModel;
 });

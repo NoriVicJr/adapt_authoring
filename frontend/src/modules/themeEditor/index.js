@@ -8,7 +8,6 @@ define(function(require) {
 
   var ROUTE = 'edittheme';
 
-  // Origin.on('editorMenuSidebar:postRender', function() {
   Origin.on('editorCommon:theme', function() {
     Origin.router.navigateTo('editor/' + Origin.editor.data.course.get('_id') + '/' + ROUTE);
   });

@@ -34,10 +34,10 @@ define(function(require) {
     },
 
     cancelEditing: function(event) {
-        event && event.preventDefault();
-        Origin.trigger('editorThemingSidebar:views:cancel');
-        Backbone.history.history.back();
-        Origin.trigger('editingOverlay:views:hide');
+      event && event.preventDefault();
+      Origin.trigger('editorThemingSidebar:views:cancel');
+      Backbone.history.history.back();
+      Origin.trigger('editingOverlay:views:hide');
     }
   }, {
     template: 'editorThemingSidebar'

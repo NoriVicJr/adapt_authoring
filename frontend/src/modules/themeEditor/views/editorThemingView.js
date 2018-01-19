@@ -14,11 +14,9 @@ define(function(require){
   var ThemingView = EditorOriginView.extend({
     tagName: 'div',
     className: 'theming',
-
     settings: {
       autoRender: false
     },
-
     events: {
       'change .theme select': 'onThemeChanged',
       'change .preset select': 'onPresetChanged',
@@ -28,11 +26,13 @@ define(function(require){
 
     initialize: function() {
       this.listenTo(this, 'dataReady', this.render);
-      this.listenTo(Origin, 'editorThemingSidebar:views:save', this.saveData);
-      this.listenTo(Origin, 'editorThemingSidebar:views:savePreset', this.onSavePresetClicked);
 
-      this.listenTo(Origin, 'managePresets:edit', this.onEditPreset);
-      this.listenTo(Origin, 'managePresets:delete', this.onDeletePreset);
+      this.listenTo(Origin, {
+        'editorThemingSidebar:views:save': this.saveData,
+        'editorThemingSidebar:views:savePreset': this.onSavePresetClicked,
+        'managePresets:edit': this.onEditPreset,
+        'managePresets:delete': this.onDeletePreset
+      });
 
       this.loadCollections();
 
