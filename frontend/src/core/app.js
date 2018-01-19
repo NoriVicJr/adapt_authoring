@@ -68,6 +68,7 @@
       'modules/projects/index',
       'modules/scaffold/index',
       'modules/sidebar/index',
+      'modules/themeEditor/index',
       'modules/user/index',
       'modules/userManagement/index',
     ], callback);
