@@ -53,8 +53,8 @@ AdaptOutput.prototype.publish = function(courseId, mode, request, response, next
     },
     function doTheme(callback) {
       var temporaryThemeFolder = path.join(SRC_FOLDER, Constants.Folders.Theme, customPluginName);
-      self.applyTheme(tenantId, courseId, outputJson, temporaryThemeFolder, function(err) {
-        outputJson.config[0]._theme = themeName = customPluginName;
+      self.applyTheme(tenantId, courseId, outputJson, temporaryThemeFolder, function(err, appliedThemeName) {
+        outputJson.config[0]._theme = themeName = appliedThemeName;
         callback(err);
       });
     },
