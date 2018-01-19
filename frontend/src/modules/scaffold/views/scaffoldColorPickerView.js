@@ -49,13 +49,13 @@ define(function(require) {
         /**
         * HACK change the submit button
         */
-        $('.colorpicker_submit', this.getColourPicker()).html(window.polyglot.t('app.coloursave'));
+        $('.colorpicker_submit', this.getColourPicker()).html(Origin.l10n.t('app.coloursave'));
         /*
         * Append reset button
         */
         // FIXME externalise this...
         var btnStyle = 'display:inline-block;margin-left:10px;position:relative;vertical-align:top;top:10px;cursor:pointer;';
-        var btn = '<div class="reset" style="' + btnStyle + '"><i class="fa fa-ban"></i> ' + window.polyglot.t('app.colourclear') + '</div>';
+        var btn = '<div class="reset" style="' + btnStyle + '"><i class="fa fa-ban"></i> ' + Origin.l10n.t('app.colourclear') + '</div>';
         this.$el.after(btn);
         this.$el.siblings('.reset').click(_.bind(this.resetValue, this));
 
