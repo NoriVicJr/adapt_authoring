@@ -13,14 +13,14 @@ define(function(require) {
   });
 
   Origin.on('router:editor', function(route1, route2, route3, route4) {
-    if(route2 === ROUTE) {
-      var configModel = new EditorConfigModel({ _courseId: route1 });
-      configModel.fetch({
-        success: function() {
-          Origin.sidebar.addView(new EditorThemingSidebarView().$el);
-          Origin.editingOverlay.addView(new EditorThemingView({ model: configModel }).$el);
-        }
-      });
+    if(route2 !== ROUTE) {
+      return;
     }
+    (new ConfigModel({ _courseId: route1 })).fetch({
+      success: function(model) {
+        Origin.sidebar.addView(new EditorThemingSidebarView().$el);
+        Origin.contentPane.setView(EditorThemingView, { model: model });
+      }
+    });
   });
 });
