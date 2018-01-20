@@ -46,10 +46,7 @@ define(function(require){
     render: function() {
       EditorOriginView.prototype.render.apply(this, arguments);
 
-      Origin.trigger('location:title:update', {
-        breadcrumbs: ['dashboard','course', { title: window.polyglot.t('app.themeeditor') }],
-        title: window.polyglot.t('app.themingtitle')
-      });
+      Origin.trigger('location:title:update', Origin.l10n.t('app.themingtitle'));
 
       this.renderForm();
     },
@@ -129,7 +126,7 @@ define(function(require){
       // remove options first
       $('option', select).remove();
       // add 'no presets'
-      select.append($('<option>', { value: "", disabled: 'disabled', selected: 'selected' }).text(window.polyglot.t('app.selectinstr')));
+      select.append($('<option>', { value: "", disabled: 'disabled', selected: 'selected' }).text(Origin.l10n.t('app.selectinstr')));
       // add options
       _.each(this.themes.models, function(item, index) {
         if(item.get('_isAvailableInEditor') === false) return;
@@ -154,7 +151,7 @@ define(function(require){
       // remove options first
       $('option', select).remove();
       // add 'no presets'
-      select.append($('<option>', { value: "", selected: 'selected' }).text(window.polyglot.t('app.nopresets')));
+      select.append($('<option>', { value: "", selected: 'selected' }).text(Origin.l10n.t('app.nopresets')));
       // add options
       _.each(presets, function(item, index) {
         select.append($('<option>', { value: item.get('_id') }).text(item.get('displayName')));
@@ -207,7 +204,7 @@ define(function(require){
       var self = this;
       Origin.Notify.confirm({
         type: 'warning',
-        text: window.polyglot.t('app.restoredefaultstext'),
+        text: Origin.l10n.t('app.restoredefaultstext'),
         callback: function(confirmed) {
           if(confirmed) {
             var preset = self.getSelectedPreset();
@@ -230,7 +227,7 @@ define(function(require){
       if (selectedTheme === undefined) {
         Origin.Notify.alert({
           type: 'error',
-          text: window.polyglot.t('app.errornothemeselected')
+          text: Origin.l10n.t('app.errornothemeselected')
         });
         return false;
       }
@@ -417,13 +414,13 @@ define(function(require){
       var self = this;
       Origin.Notify.alert({
         type: 'input',
-        text: window.polyglot.t('app.presetinputtext'),
+        text: Origin.l10n.t('app.presetinputtext'),
         closeOnConfirm: false,
         showCancelButton: true,
         callback: function() {
           var preset = self.presets.findWhere({ displayName: arguments[0] })
           if(preset) {
-            swal.showInputError(window.polyglot.t('app.duplicatepreseterror'));
+            swal.showInputError(Origin.l10n.t('app.duplicatepreseterror'));
           } else {
             // watch out for injection attacks
             self.savePreset(Helpers.escapeText(arguments[0]));
@@ -436,7 +433,7 @@ define(function(require){
     onSaveError: function() {
       Origin.Notify.alert({
         type: 'error',
-        text: window.polyglot.t('app.errorsave')
+        text: Origin.l10n.t('app.errorsave')
       });
       console.log('EditorThemingView.onSaveError:', arguments);
 

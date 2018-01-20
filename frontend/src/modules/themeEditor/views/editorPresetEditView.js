@@ -65,7 +65,7 @@ define(function(require){
       var self = this;
       var presetName = $(event.currentTarget).closest('.preset').attr('data-name');
       Origin.Notify.confirm({
-        text: window.polyglot.t('app.presetdeletetext', { preset: presetName }),
+        text: Origin.l10n.t('app.presetdeletetext', { preset: presetName }),
         callback: function(confirmed) {
           if(confirmed === true) {
             Origin.trigger('managePresets:delete', presetName);
