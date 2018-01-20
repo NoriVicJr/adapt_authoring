@@ -439,7 +439,7 @@ define(function(require){
 
     onSaveSuccess: function() {
       Origin.trigger('editingOverlay:views:hide');
-      Origin.trigger('editor:refreshData', this.navigateBack, this);
+      Origin.trigger('editor:refreshData', _.bind(this.navigateBack, this));
     }
   }, {
     template: 'editorTheming'
