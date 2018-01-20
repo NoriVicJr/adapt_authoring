@@ -2,27 +2,27 @@
 /**
  * Adapt Output plugin
  */
+var async = require('async');
+var exec = require('child_process').exec;
+var fs = require('fs-extra');
+var path = require('path');
+var semver = require('semver');
+var util = require('util');
+// locals
+var configuration = require('../../../lib/configuration');
+var Constants = require('../../../lib/outputmanager').Constants;
+var database = require('../../../lib/database');
+var helpers = require('../../../lib/helpers');
+var installHelpers = require('../../../lib/installHelpers');
+var OutputPlugin = require('../../../lib/outputmanager').OutputPlugin;
+var logger = require('../../../lib/logger');
+var usermanager = require('../../../lib/usermanager');
 
-var origin = require('../../../'),
-    OutputPlugin = require('../../../lib/outputmanager').OutputPlugin,
-    Constants = require('../../../lib/outputmanager').Constants,
-    configuration = require('../../../lib/configuration'),
-    database = require('../../../lib/database'),
-    util = require('util'),
-    path = require('path'),
-    fs = require('fs-extra'),
-    async = require('async'),
-    archive = require('archiver')('zip'),
-    usermanager = require('../../../lib/usermanager'),
-    exec = require('child_process').exec,
-    semver = require('semver'),
-    helpers = require('../../../lib/helpers'),
-    installHelpers = require('../../../lib/installHelpers'),
-    logger = require('../../../lib/logger');
+var archive = require('archiver')('zip');
+var origin = require('../../../')();
 
 function AdaptOutput() {
 }
-
 util.inherits(AdaptOutput, OutputPlugin);
 
 AdaptOutput.prototype.publish = function(courseId, mode, request, response, next) {
