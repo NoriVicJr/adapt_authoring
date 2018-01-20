@@ -26,7 +26,6 @@ function AdaptOutput() {
 util.inherits(AdaptOutput, OutputPlugin);
 
 AdaptOutput.prototype.publish = function(courseId, mode, request, response, next) {
-  var app = origin();
   var self = this;
   var user = usermanager.getCurrentUser();
   var tenantId = user.tenant._id;
@@ -35,7 +34,6 @@ AdaptOutput.prototype.publish = function(courseId, mode, request, response, next
   var themeName;
   var menuName = Constants.Defaults.MenuName;
   var frameworkVersion;
-  var resultObject = {};
 
   // shorthand directories
   var FRAMEWORK_ROOT_FOLDER = path.join(configuration.tempDir, configuration.getConfig('masterTenantID'), Constants.Folders.Framework);
@@ -95,55 +93,46 @@ AdaptOutput.prototype.publish = function(courseId, mode, request, response, next
     function writeJSON(callback) {
       self.writeCourseJSON(outputJson, path.join(BUILD_FOLDER, Constants.Folders.Course), callback);
     },
-    function getFrameworkVersion(callback) {
-      installHelpers.getInstalledFrameworkVersion(function(error, version) {
-        frameworkVersion = version;
-        callback(error);
-      });
-    },
-    function runGruntProcess(callback) {
+    function buildCourse(callback) {
       fs.exists(path.join(BUILD_FOLDER, Constants.Filenames.Main), function(exists) {
         if (exists && !isRebuildRequired) {
-          resultObject.success = true;
-          return callback(null, 'Framework already built, nothing to do');
+          return callback();
         }
         logger.log('info', '3.1. Ensuring framework build exists');
 
-        var outputFolder = COURSE_FOLDER.replace(FRAMEWORK_ROOT_FOLDER + path.sep, '');
-        // Append the 'build' folder to later versions of the framework
-        if (semver.gte(semver.clean(frameworkVersion), semver.clean('2.0.0'))) {
-          outputFolder = path.join(outputFolder, Constants.Folders.Build);
-        }
-        logger.log('info', '3.2. Using theme: ' + themeName);
-        logger.log('info', '3.3. Using menu: ' + menuName);
+        installHelpers.getInstalledFrameworkVersion(function(error, frameworkVersion) {
+          var outputFolder = COURSE_FOLDER.replace(FRAMEWORK_ROOT_FOLDER + path.sep, '');
+          // Append the 'build' folder to later versions of the framework
+          // FIXME probably about time we removed this...
+          if (semver.gte(semver.clean(frameworkVersion), semver.clean('2.0.0'))) {
+            outputFolder = path.join(outputFolder, Constants.Folders.Build);
+          }
+          logger.log('info', '3.2. Using theme: ' + themeName);
+          logger.log('info', '3.3. Using menu: ' + menuName);
 
-        var buildMode = outputJson.config._generateSourcemap === true ? 'dev' : 'prod';
-        var cmd = `grunt server-build:${buildMode} --outputdir=${outputFolder} --theme=${themeName} --menu=${menuName}`;
+          var buildMode = outputJson.config._generateSourcemap === true ? 'dev' : 'prod';
+          var cmd = `grunt server-build:${buildMode} --outputdir=${outputFolder} --theme=${themeName} --menu=${menuName}`;
 
-        logger.log('info', cmd);
+          logger.log('info', cmd);
 
-        exec(cmd, { cwd: FRAMEWORK_ROOT_FOLDER }, function(error, stdout, stderr) {
-          if (error !== null || stderr.length !== 0) {
-            if(error) {
-              logger.log('error', 'exec error: ' + error);
-              logger.log('error', 'stdout error: ' + stdout);
-            } else {
-              logger.log('error', 'stderr: ' + stderr);
+          exec(cmd, { cwd: FRAMEWORK_ROOT_FOLDER }, function(error, stdout, stderr) {
+            if (error !== null || stderr.length !== 0) {
+              if(error) {
+                logger.log('error', 'exec error: ' + error);
+                logger.log('error', 'stdout error: ' + stdout);
+              } else {
+                logger.log('error', 'stderr: ' + stderr);
+              }
+              return callback(error);
             }
-            resultObject.success = false;
-            return callback(error, 'Error building framework');
-          }
-          if (stdout.length !== 0) {
-            logger.log('info', 'stdout: ' + stdout);
-            app.emit('previewCreated', tenantId, courseId, outputFolder);
-          }
-          resultObject.success = true;
-          callback(null, 'Framework built OK');
+            if (stdout.length > 0) {
+              logger.log('info', 'stdout: ' + stdout);
+              origin.emit('previewCreated', tenantId, courseId, outputFolder);
+            }
+            self.clearBuildFlag(path.join(BUILD_FOLDER, Constants.Filenames.Rebuild), callback);
+          });
         });
       });
-    },
-    function removeBuildFlag(callback) {
-      self.clearBuildFlag(path.join(BUILD_FOLDER, Constants.Filenames.Rebuild), callback);
     },
     function zipPackage(callback) {
       if (mode !== Constants.Modes.publish) { // no download required, skip
@@ -155,11 +144,12 @@ AdaptOutput.prototype.publish = function(courseId, mode, request, response, next
       var output = fs.createWriteStream(filename);
 
       output.on('close', function() {
-        resultObject.filename = filename;
-        resultObject.zipName = zipName;
         // Indicate that the zip file is ready for download
-        app.emit('zipCreated', tenantId, courseId, filename, zipName);
-        callback();
+        origin.emit('zipCreated', tenantId, courseId, filename, zipName);
+        next(null, {
+          filename: filename,
+          zipName: zipName
+        });
       });
       archive.on('error', callback);
       archive.pipe(output);
@@ -168,9 +158,8 @@ AdaptOutput.prototype.publish = function(courseId, mode, request, response, next
   ], function(err) {
     if (err) {
       logger.log('error', err);
-      return next(err);
     }
-    next(null, resultObject);
+    next(err);
   });
 };
 
@@ -266,5 +255,4 @@ AdaptOutput.prototype.export = function (courseId, request, response, next) {
  * Module exports
  *
  */
-
 exports = module.exports = AdaptOutput;
