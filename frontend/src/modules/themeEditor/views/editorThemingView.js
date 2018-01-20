@@ -56,35 +56,34 @@ define(function(require){
 
       var selectedTheme = this.getSelectedTheme();
 
-      if(this.themeIsEditable(selectedTheme)) {
-        this.$('.tile.preset').show();
-        this.$('.buttons-container').show();
-        try {
-          this.form = Origin.scaffold.buildForm({
-            model: selectedTheme,
-            schemaType: selectedTheme.get('theme')
-          });
-        }
-        catch(e) {
-          console.log(e);
-        }
-
-        if(this.form) {
-          this.$('.form-container').html(this.form.el);
-          this.$('.empty-message').hide();
-        } else {
-          this.$('.empty-message').show();
-        }
-
-        this.$('.theme-customiser').show();
-        Origin.trigger('theming:showPresetButton', true);
-
-        var toRestore = Origin.editor.data.course.get('themeSettings') || this.getDefaultThemeSettings();
-        this.restoreFormSettings(toRestore);
-      } else {
+      if(!this.themeIsEditable(selectedTheme)) {
         this.$('.tile.preset').hide();
         this.$('.buttons-container').hide();
+        return;
       }
+
+      this.$('.tile.preset').show();
+      this.$('.buttons-container').show();
+      try {
+        this.form = Origin.scaffold.buildForm({
+          model: selectedTheme,
+          schemaType: selectedTheme.get('theme')
+        });
+      }
+      catch(e) {
+        console.log(e);
+      }
+      if(this.form) {
+        this.$('.form-container').html(this.form.el);
+        this.$('.empty-message').hide();
+      } else {
+        this.$('.empty-message').show();
+      }
+      this.$('.theme-customiser').show();
+      Origin.trigger('theming:showPresetButton', true);
+
+      var toRestore = Origin.editor.data.course.get('themeSettings') || this.getDefaultThemeSettings();
+      this.restoreFormSettings(toRestore);
     },
 
     removeForm: function() {
@@ -435,8 +434,6 @@ define(function(require){
         type: 'error',
         text: Origin.l10n.t('app.errorsave')
       });
-      console.log('EditorThemingView.onSaveError:', arguments);
-
       this.navigateBack();
     },
 
