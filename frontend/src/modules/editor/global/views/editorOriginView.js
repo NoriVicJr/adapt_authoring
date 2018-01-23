@@ -46,7 +46,7 @@ define(function(require){
       } else {
         $('.form-container > form > div > fieldset').addClass('display-none');
         _.each(this.filters, function(filter) {
-          $('.fieldset-' + Helpers.lowerCase(filter)).removeClass('display-none');
+          $('.fieldset-' + filter).removeClass('display-none');
         });
       }
     },

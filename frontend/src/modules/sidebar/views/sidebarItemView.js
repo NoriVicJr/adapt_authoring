@@ -73,7 +73,7 @@ define(function(require) {
             return;
           }
           // Convert fieldsets legend value to class name
-          var className = Helpers.stringToClassName(fieldset.legend);
+          var className = fieldset.id;
           // Set error message
           this.$('.sidebar-fieldset-filter-' + className).addClass('error');
         }, this);

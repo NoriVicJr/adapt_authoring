@@ -339,5 +339,6 @@
   "app.presetedittitle": "Manage saved presets",
   "app.preseteditdesc": "You can view, change name and delete the saved presets for the chosen theme here.",
   "app.presetdeletetext": "This will delete the saved '<b>%{preset}</b>' preset. <br/><br/><b>IMPORTANT:</b> <em>This will affect any existing courses using this preset.<em>",
-  "app.presetnameplaceholder": "Enter new name"
+  "app.presetnameplaceholder": "Enter new name",
+  "app.fieldset-menuSettings": "Menu settings"
 }

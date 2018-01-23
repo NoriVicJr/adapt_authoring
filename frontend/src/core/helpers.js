@@ -22,19 +22,19 @@ define(function(require){
         },
         stringToClassName: function(text) {
           if (!text) {
-            return;
+            return '';
           }
-          // Check if first character is an underscore and remove
-          // Normally used for attribute with '_'s
-          if (text.slice(1) === '_') {
-            text = text.slice(1);
-          }
-          // Remove _ and spaces with dashes
-          return text.replace(/_| /g, "-").toLowerCase();
+          // replace whitespace with a dash
+          return text.replace(/\W/g, "-");
         },
         keyToTitleString: function(key) {
           if (!key) {
-            return;
+            return '';
+          }
+          var l10nKey = 'app.fieldset-' + key;
+          var l10nVal = Origin.l10n.t(l10nKey);
+          if(l10nVal !== l10nKey) {
+            return l10nVal;
           }
           // Take in key value and remove all _'s and capitalise
           var string = key.replace(/_/g, "").toLowerCase();

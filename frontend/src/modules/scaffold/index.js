@@ -231,39 +231,31 @@ define(function(require) {
 			}
 		};
 
+		// Build main fieldSets
 		_.each(schema, function(value, key) {
-			// Build main fieldSets
-			// Check if field is a settings
 			if (key === '_extensions') {
 				return;
 			}
-
 			if (value.isSetting) {
-
 				fieldsets.settings.fields.push(key);
-
-			} else  if (value.type === 'object') {
-				// If value is an object - should give it some rights
-				// and add it as a field set - but not _extensions
-				if (fieldsets[key]) {
-
-					fieldsets[key].fields.push(key);
-
-				} else {
-
-					fieldsets[key] = {
-						legend: Helpers.keyToTitleString(key),
-						fields: [key]
-					};
-
-				}
-
-			} else {
-
-				// All general ones here please
-				fieldsets.general.fields.push(key);
-
+				return;
 			}
+			if (value.type !== 'object') { // catch-all for lone fields
+				fieldsets.general.fields.push(key);
+				return;
+			}
+			// treat objects as fieldsets
+			if (fieldsets[key]) {
+				fieldsets[key].fields.push(key);
+				return;
+			}
+			// create a new fieldset
+			fieldsets[key] = {
+				id: Helpers.stringToClassName(key),
+				legend: Helpers.keyToTitleString(key),
+				fields: [key]
+			};
+			console.log(fieldsets[key]);
 		});
 
 		// Should check if no settings and no extensions are available
